@@ -1,0 +1,78 @@
+Scripts for referance with linux
+chmod u+x file_name provides permission to allow to be ran
+-------------------------------------------------------------------
+Network status script
+
+#!/bin/bash
+is_alive_ping()
+{
+  ping -c 1 $1 > /dev/null
+  [ $? -eq 0 ] && echo Node with IP: $i is up.
+}
+#for i in 10.0.0{1..255} #for network scan
+#for i in 10.0.0.12 #for single IP scan
+do
+is_alive_ping $i & disown
+done
+
+------------------------------------------------------------------
+If file installed on system
+
+#!/bin/bash
+echo "enter your package name"
+read name
+dpkg -s $name &> /dev/null
+ if [ $? -ne 0 ]
+      then
+          echo "not installed"  
+          sudo apt-get update
+          sudo apt-get install $name
+       else
+          echo  "installed"
+    fi
+------------------------------------------------------------------
+System Info
+
+#!/bin/bash
+echo "Starting to run the script..."
+# VARIABLE ASSIGNMENT
+# Show hostname:
+HOST=$(hostname)
+# User executing the script:
+CURRENTUSER=$(whoami)
+# Current date:
+CURRENTDATE=$(date +%F)
+# Host IP address:
+IPADDRESS=$(hostname -I | cut -d ' ' -f1)
+
+# SHOW MESSAGES
+echo "Today is $CURRENTDATE"
+echo "Hostname: $HOST ($IPADDRESS)"
+echo "User info for $CURRENTUSER:"
+grep $CURRENTUSER /etc/passwd
+
+-------------------------------------------------------------------------
+Check is a single port is open
+
+#!/bin/bash
+if timeout 5 bash -c '</dev/tcp/kernel.org/21>/dev/null' #/21> is port can be changed to any
+then
+  echo "Port is open"
+else
+  echo "Port is closed"
+fi
+----------------------------------------------------------------------------
+Check all open ports on a system
+
+#!/bin/bash
+hostname=10.0.0.12 #ip address of machine you want to scan
+for port in {1..65535};do
+2>/dev/null echo > /dev/tcp/$hostname/$port
+if [ $? == 0 ]
+ then
+ {
+ echo " $port is open"
+ }
+fi
+done
+
